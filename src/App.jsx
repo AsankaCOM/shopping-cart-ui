@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useAuth0 } from "@auth0/auth0-react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {
+    isLoading, // Loading state, the SDK needs to reach Auth0 on load
+    isAuthenticated,
+    error,
+    loginWithRedirect: login, // Starts the login flow
+    logout: auth0Logout, // Starts the logout flow
+    user, // User profile
+  } = useAuth0();
 
-  return (
+  const signup = () =>
+    login({ authorizationParams: { screen_hint: "signup" } });
+
+  const logout = () =>
+    auth0Logout({ logoutParams: { returnTo: window.location.origin } });
+
+  if (isLoading) return "Loading...";
+
+  return isAuthenticated ? (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <p>Logged in as {user.email}</p>
+
+      <h1>User Profile</h1>
+
+      <pre>{JSON.stringify(user, null, 2)}</pre>
+
+      <button onClick={logout}>Logout</button>
     </>
-  )
+  ) : (
+    <>
+      {error && <p>Error: {error.message}</p>}
+
+      <button onClick={signup}>Signup</button>
+
+      <button onClick={login}>Login</button>
+    </>
+  );
 }
 
-export default App
+export default App;
