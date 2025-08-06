@@ -11,8 +11,8 @@ createRoot(document.getElementById("root")).render(
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: "https://dev-yohelt72e38t5w40.us.auth0.com/api/v2/",
-        scope: "read:current_user openid profile email update:current_user_metadata"
+        // audience: "https://dev-yohelt72e38t5w40.us.auth0.com/api/v2/",
+        // scope: "read:current_user openid profile email update:current_user_metadata"
       }}
     >
       <App />

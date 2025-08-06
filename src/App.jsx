@@ -12,8 +12,8 @@ function App() {
     getAccessTokenSilently,
   } = useAuth0();
 
-  const [userMetadata, setUserMetadata] = useState(null);
-
+  const [books, setBooks] = useState(null);
+  const [showCart, setshowCart] = useState(true);
 
   useEffect(() => {
     const getUserMetadata = async () => {
@@ -27,24 +27,24 @@ function App() {
           },
         });
 
-        const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
+        const userDetailsByIdUrl = `http://localhost:3000/cart/books`;
 
-        const metadataResponse = await fetch(userDetailsByIdUrl, {
+        const booksResponse = await fetch(userDetailsByIdUrl, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
 
-        const { user_metadata } = await metadataResponse.json();
+        const booklist = await booksResponse.json();
 
-        setUserMetadata(user_metadata);
+        setBooks(booklist);
       } catch (e) {
         console.log(e.message);
       }
     };
 
     getUserMetadata();
-  }, [getAccessTokenSilently, user?.sub]);
+  }, [getAccessTokenSilently, user?.sub, showCart]);
 
   const signup = () =>
     login({ authorizationParams: { screen_hint: "signup" } });
@@ -57,7 +57,7 @@ function App() {
 
   return isAuthenticated ? (
     <>
-      <p>Logged in as {user.email}</p>
+      <p>Logged in as {user.name}</p>
 
       <h1>User Profile</h1>
       <img src={user.picture} alt={user.name} />
@@ -65,14 +65,15 @@ function App() {
       <pre>{JSON.stringify(user, null, 2)}</pre>
 
       <div>
-        <h3>User Metadata</h3>
-        {userMetadata ? (
-          <pre>{JSON.stringify(userMetadata, null, 2)}</pre>
+        <h3>Books</h3>
+        {books ? (
+          <pre>{JSON.stringify(books, null, 2)}</pre>
         ) : (
           <p>No user metadata defined</p>
         )}
       </div>
 
+      <button onClick={login}>show books</button>
       <button onClick={logout}>Logout</button>
     </>
   ) : (
