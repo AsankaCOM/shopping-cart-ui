@@ -13,7 +13,7 @@ function App() {
   } = useAuth0();
 
   const [books, setBooks] = useState(null);
-  const [showCart, setshowCart] = useState(true);
+  const [showCart, setshowCart] = useState(false);
 
   useEffect(() => {
     const getUserMetadata = async () => {
@@ -52,6 +52,9 @@ function App() {
   const logout = () =>
     auth0Logout({ logoutParams: { returnTo: window.location.origin } });
 
+  const show = () => { setshowCart(true) }
+  const hide = () => { setshowCart(false) }
+
 
   if (isLoading) return "Loading...";
 
@@ -64,16 +67,26 @@ function App() {
 
       <pre>{JSON.stringify(user, null, 2)}</pre>
 
+      {console.log(showCart)}
+
       <div>
-        <h3>Books</h3>
-        {books ? (
-          <pre>{JSON.stringify(books, null, 2)}</pre>
-        ) : (
-          <p>No user metadata defined</p>
+
+        {(showCart && books) && (
+          <>
+            <h3>Books</h3>
+            <pre>{JSON.stringify(books, null, 2)}</pre>
+          </>
         )}
+        {!books && (
+          <p>Books list is empty</p>
+        )
+        }
+
       </div>
 
-      <button onClick={login}>show books</button>
+      <button onClick={show}>show books</button>
+
+      <button onClick={hide}>hide books</button>
       <button onClick={logout}>Logout</button>
     </>
   ) : (
