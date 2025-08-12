@@ -1,14 +1,18 @@
-function ProductCatalog({ books }) {
-  if (!books || books.length === 0) {
-    return <p>Books list is empty</p>;
-  }
+import Card from "./ui/components/Card"
 
-  return (
-    <>
-      <h3>Books</h3>
-      <pre>{JSON.stringify({ books }, null, 2)}</pre>
-    </>
-  );
+function ProductCatalog({ books }) {
+    if (!books || books.length === 0) {
+        return <p>Books list is empty</p>;
+    }
+
+    return (
+        <div className="card-grid">
+            {/* <pre>{JSON.stringify(books, null, 2)}</pre> */}
+            {books.map((book, index) => (
+                <Card {...book} />
+            ))}
+        </div>
+    );
 }
 
 export default ProductCatalog;

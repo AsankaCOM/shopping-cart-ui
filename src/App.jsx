@@ -19,7 +19,7 @@ function App() {
   } = useAuth0();
 
   const [books, setBooks] = useState(null);
-  const [showCart, setshowCart] = useState(false);
+  const [showCart, setshowCart] = useState(true);
 
   useEffect(() => {
     const getUserMetadata = async () => {
@@ -32,7 +32,7 @@ function App() {
             scope: "read:current_user",
           },
         });
-
+  
         const userDetailsByIdUrl = `http://localhost:3000/cart/books`;
 
         const booksResponse = await fetch(userDetailsByIdUrl, {
@@ -60,15 +60,16 @@ function App() {
 
   return isAuthenticated ? (
     <>
-      <Profile />
+      <div>
+        <Profile />
+        <button onClick={show}>show books</button>
+        <button onClick={hide}>hide books</button>
+        <LogoutButton />
+      </div>
 
       {showCart && (
         <ProductCatolog books={books} />
       )}
-
-      <button onClick={show}>show books</button>
-      <button onClick={hide}>hide books</button>
-      <LogoutButton />
     </>
   ) : (
     <>

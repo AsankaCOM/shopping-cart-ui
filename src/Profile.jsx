@@ -7,8 +7,6 @@ function Profile() {
   return (
     <>
       <div>Logged in as {user.name}</div>
-      <img src={user.picture} alt={user.name} />
-      <pre>{JSON.stringify(user, null, 2)}</pre>
     </>
   );
 }
