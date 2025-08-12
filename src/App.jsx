@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
-import LoginButton from "./LoginButton"
-import LogoutButton from "./LogoutButton"
-import SignupButton from "./SignupButton"
-import Profile from "./Profile"
 import ProductCatolog from "./ProductCatolog"
+import Header from './ui/components/Header';
 
 function App() {
   const {
@@ -51,24 +48,27 @@ function App() {
     getUserMetadata();
   }, [getAccessTokenSilently, user?.sub]);
 
-
   if (isLoading) return "Loading...";
+
+  const loginHandler = () => { login() }
+  const logoutHandler = () => {
+    auth0Logout({
+      logoutParams: {
+        returnTo: window.location.origin
+      }
+    });
+  }
+  const signupHandler = () => login({ authorizationParams: { screen_hint: "signup" } });
 
   return isAuthenticated ? (
     <>
-      <div>
-        <Profile />
-        <LogoutButton />
-      </div>
+      <Header isAuthenticated={isAuthenticated} user={user} logout={logoutHandler} />
       <ProductCatolog books={books} />
-
     </>
   ) : (
     <>
+      <Header isAuthenticated={isAuthenticated} user={user} login={loginHandler} signup={signupHandler} />
       {error && <p>Error: {error.message}</p>}
-
-      <SignupButton />
-      <LoginButton />
     </>
   );
 }

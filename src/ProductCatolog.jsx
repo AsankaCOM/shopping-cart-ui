@@ -9,7 +9,7 @@ function ProductCatalog({ books }) {
         <div className="card-grid">
             {/* <pre>{JSON.stringify(books, null, 2)}</pre> */}
             {books.map((book, index) => (
-                <Card {...book} />
+                <Card key={index} {...book} />
             ))}
         </div>
     );
