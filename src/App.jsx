@@ -60,17 +60,24 @@ function App() {
   }
   const signupHandler = () => login({ authorizationParams: { screen_hint: "signup" } });
 
-  return isAuthenticated ? (
+  return !error ? (
     <>
-      <Header isAuthenticated={isAuthenticated} user={user} logout={logoutHandler} />
-      <ProductCatolog books={books} />
+      <Header
+        isAuthenticated={isAuthenticated}
+        user={user}
+        login={loginHandler}
+        logout={logoutHandler}
+        signup={signupHandler}
+      />
+
+      {books && <ProductCatolog books={books} />}
     </>
   ) : (
     <>
-      <Header isAuthenticated={isAuthenticated} user={user} login={loginHandler} signup={signupHandler} />
       {error && <p>Error: {error.message}</p>}
     </>
   );
+
 }
 
 export default App;
