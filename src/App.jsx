@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
-import ProductCatolog from "./ProductCatolog"
-import Header from './ui/components/Header';
+import Books from "./components/Books"
+import Header from './components/Header';
 
 function App() {
   const {
@@ -15,7 +15,7 @@ function App() {
     getAccessTokenSilently,
   } = useAuth0();
 
-  const [books, setBooks] = useState(null);
+  const [accessToken, setAccessToken] = useState()
 
   useEffect(() => {
     const getUserMetadata = async () => {
@@ -29,17 +29,7 @@ function App() {
           },
         });
 
-        const userDetailsByIdUrl = `http://localhost:3000/cart/books`;
-
-        const booksResponse = await fetch(userDetailsByIdUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const booklist = await booksResponse.json();
-
-        setBooks(booklist);
+        setAccessToken(accessToken)
       } catch (e) {
         console.log(e.message);
       }
@@ -70,7 +60,7 @@ function App() {
         signup={signupHandler}
       />
 
-      {books && <ProductCatolog books={books} />}
+     {accessToken ? <Books accessToken={accessToken} /> : <div>Login required</div>}
     </>
   ) : (
     <>
