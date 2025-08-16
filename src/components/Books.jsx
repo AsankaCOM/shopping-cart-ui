@@ -33,7 +33,7 @@ function Books({ accessToken }) {
     return (
         <ul id="books">
             {loadedBooks.map((book, index) => (
-                <div key={index}> <BookItem {...book} /></div>
+                <BookItem key={index} book={book} />
             ))}
 
         </ul>
