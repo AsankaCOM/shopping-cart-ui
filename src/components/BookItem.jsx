@@ -1,4 +1,5 @@
 import { currencyFormatter } from "../util/formatting";
+import Button from "./ui/Button.jsx";
 
 var BookItem = ({ book }) => {
     return (
@@ -11,7 +12,7 @@ var BookItem = ({ book }) => {
                     <p className="book-item-author">by {book.author}</p>
                 </div>
                 <p className="book-item-actions">
-                    <button>Add to Cart</button>
+                    <Button>Add to Cart</Button>
                 </p>
             </article>
         </li>

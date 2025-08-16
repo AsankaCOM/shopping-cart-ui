@@ -1,6 +1,7 @@
 import React from 'react';
 
 import logoImg from '../assets/book-shop-logo.jpg'
+import Button from './ui/Button.jsx';
 
 const Header = ({ isAuthenticated, user, logout, login, signup }) => {
     return (
@@ -17,7 +18,7 @@ const Header = ({ isAuthenticated, user, logout, login, signup }) => {
                 {isAuthenticated && <button onClick={logout}>Logout</button>}
                 {!isAuthenticated && <button onClick={login}>Log in</button>}
                 {!isAuthenticated && <button onClick={signup}>Signup</button>}
-                <button>Cart (0)</button>
+                <Button textOnly>Cart (0)</Button>
             </nav>
         </header>
     );
