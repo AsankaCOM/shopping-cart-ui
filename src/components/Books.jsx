@@ -7,7 +7,7 @@ function Books({ accessToken }) {
 
     useEffect(() => {
         const fetchBooks = async () => {
-            const booksResponse = await fetch(`http://localhost:3000/cart/books`, {
+            const booksResponse = await fetch(`http://localhost:8080/cart/books`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
