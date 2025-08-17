@@ -3,6 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 import Books from "./components/Books"
 import Header from './components/Header';
+import { CartContextProvider } from "./store/CartContext.jsx";
 
 function App() {
   const {
@@ -51,7 +52,7 @@ function App() {
   const signupHandler = () => login({ authorizationParams: { screen_hint: "signup" } });
 
   return !error ? (
-    <>
+    <CartContextProvider>
       <Header
         isAuthenticated={isAuthenticated}
         user={user}
@@ -59,9 +60,8 @@ function App() {
         logout={logoutHandler}
         signup={signupHandler}
       />
-
-     {accessToken ? <Books accessToken={accessToken} /> : <div>Login required</div>}
-    </>
+      {accessToken ? <Books accessToken={accessToken} /> : <div>Login required</div>}
+    </CartContextProvider>
   ) : (
     <>
       {error && <p>Error: {error.message}</p>}

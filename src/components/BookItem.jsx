@@ -1,7 +1,16 @@
+import { useContext } from "react";
+
 import { currencyFormatter } from "../util/formatting";
 import Button from "./ui/Button.jsx";
+import CartContext from "../store/CartContext.jsx";
 
-var BookItem = ({ book }) => {
+const BookItem = ({ book }) => {
+    const cartCtx = useContext(CartContext);
+
+    const handleAddBooktoCart = () => {
+        cartCtx.addItem(book)
+    }
+
     return (
         <li className="book-item">
             <article>
@@ -12,7 +21,7 @@ var BookItem = ({ book }) => {
                     <p className="book-item-author">by {book.author}</p>
                 </div>
                 <p className="book-item-actions">
-                    <Button>Add to Cart</Button>
+                    <Button onClick={handleAddBooktoCart}>Add to Cart</Button>
                 </p>
             </article>
         </li>
