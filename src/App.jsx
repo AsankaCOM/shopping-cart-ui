@@ -6,6 +6,7 @@ import Header from './components/Header';
 import { CartContextProvider } from "./store/CartContext.jsx";
 import Cart from "./components/Cart.jsx";
 import UserProgressContext, { UserProgressContextProvider } from "./store/UserProgessContext.jsx";
+import Checkout from "./components/Checkout.jsx";
 
 function App() {
   const {
@@ -65,6 +66,7 @@ function App() {
         />
         {accessToken ? <Books accessToken={accessToken} /> : <div>Login required</div>}
         <Cart />
+        {accessToken ? <Checkout accessToken={accessToken} /> : <div>Login required</div>}
       </CartContextProvider>
     </UserProgressContextProvider>
   ) : (
