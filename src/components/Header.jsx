@@ -3,13 +3,20 @@ import React, { useContext } from 'react';
 import logoImg from '../assets/book-shop-logo.jpg'
 import Button from './ui/Button.jsx';
 import CartContext from '../store/CartContext.jsx';
+import Cart from './Cart.jsx';
+import UserProgressContext from '../store/UserProgessContext.jsx';
 
 const Header = ({ isAuthenticated, user, logout, login, signup }) => {
     const cartCtx = useContext(CartContext);
+    const userProgressCtx = useContext(UserProgressContext)
 
     const totalCartItems = cartCtx.items.reduce((totalNumberOfItems, item) => {
         return totalNumberOfItems + item.quantity;
     }, 0);
+
+    const handleShowCart = () => {
+        userProgressCtx.showCart()
+    }
 
     return (
         <header id="main-header">
@@ -25,7 +32,7 @@ const Header = ({ isAuthenticated, user, logout, login, signup }) => {
                 {isAuthenticated && <button onClick={logout}>Logout</button>}
                 {!isAuthenticated && <button onClick={login}>Log in</button>}
                 {!isAuthenticated && <button onClick={signup}>Signup</button>}
-                <Button textOnly>Cart ({totalCartItems})</Button>
+                <Button textOnly onClick={handleShowCart}>Cart ({totalCartItems})</Button>
             </nav>
         </header>
     );

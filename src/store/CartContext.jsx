@@ -68,7 +68,7 @@ export function CartContextProvider({ children }) {
     }
 
     const removeItem = (id) => {
-        dispatchCartAction({ type: 'REMOVE_ITEM', })
+        dispatchCartAction({ type: 'REMOVE_ITEM', id })
     }
 
     //this will distribute cart state to other components
@@ -77,8 +77,6 @@ export function CartContextProvider({ children }) {
         addItem,
         removeItem
     }
-
-    console.log(cartContext)
 
     return <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>
 }

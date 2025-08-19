@@ -4,6 +4,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Books from "./components/Books"
 import Header from './components/Header';
 import { CartContextProvider } from "./store/CartContext.jsx";
+import Cart from "./components/Cart.jsx";
+import UserProgressContext, { UserProgressContextProvider } from "./store/UserProgessContext.jsx";
 
 function App() {
   const {
@@ -32,7 +34,7 @@ function App() {
 
         setAccessToken(accessToken)
       } catch (e) {
-        console.log(e.message);
+        console.error(e.message);
       }
     };
 
@@ -52,16 +54,19 @@ function App() {
   const signupHandler = () => login({ authorizationParams: { screen_hint: "signup" } });
 
   return !error ? (
-    <CartContextProvider>
-      <Header
-        isAuthenticated={isAuthenticated}
-        user={user}
-        login={loginHandler}
-        logout={logoutHandler}
-        signup={signupHandler}
-      />
-      {accessToken ? <Books accessToken={accessToken} /> : <div>Login required</div>}
-    </CartContextProvider>
+    <UserProgressContextProvider>
+      <CartContextProvider>
+        <Header
+          isAuthenticated={isAuthenticated}
+          user={user}
+          login={loginHandler}
+          logout={logoutHandler}
+          signup={signupHandler}
+        />
+        {accessToken ? <Books accessToken={accessToken} /> : <div>Login required</div>}
+        <Cart />
+      </CartContextProvider>
+    </UserProgressContextProvider>
   ) : (
     <>
       {error && <p>Error: {error.message}</p>}
