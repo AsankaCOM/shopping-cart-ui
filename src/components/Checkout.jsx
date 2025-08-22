@@ -29,12 +29,12 @@ export default function Checkout({ accessToken }) {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${accessToken}`,
             },
-            body: JSON.stringify({
-                ordwer: {
+            body: JSON.stringify(
+                {
                     items: cartCtx.items,
                     customer: customerData
                 }
-            })
+            )
         });
 
     }
