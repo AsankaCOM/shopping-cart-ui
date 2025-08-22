@@ -64,9 +64,14 @@ function App() {
           logout={logoutHandler}
           signup={signupHandler}
         />
-        {accessToken ? <Books accessToken={accessToken} /> : <div>Login required</div>}
-        <Cart />
-        {accessToken ? <Checkout accessToken={accessToken} /> : <div>Login required</div>}
+
+        {accessToken && 
+        <>
+          <Books accessToken={accessToken} />
+          <Cart />
+          <Checkout accessToken={accessToken} />
+        </>}
+
       </CartContextProvider>
     </UserProgressContextProvider>
   ) : (
