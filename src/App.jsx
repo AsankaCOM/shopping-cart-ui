@@ -7,6 +7,7 @@ import { CartContextProvider } from "./store/CartContext.jsx";
 import Cart from "./components/Cart.jsx";
 import UserProgressContext, { UserProgressContextProvider } from "./store/UserProgessContext.jsx";
 import Checkout from "./components/Checkout.jsx";
+import OrderConfirmation from "./components/OrderConfirmation.jsx";
 
 function App() {
   const {
@@ -70,6 +71,7 @@ function App() {
           <Books accessToken={accessToken} />
           <Cart />
           <Checkout accessToken={accessToken} />
+          <OrderConfirmation />
         </>}
 
       </CartContextProvider>

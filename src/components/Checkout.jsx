@@ -17,13 +17,13 @@ export default function Checkout({ accessToken }) {
         userProgressCtx.hideCart()
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const fd = new FormData(event.target)
         const customerData = Object.fromEntries(fd.entries())
 
-        fetch('http://localhost:8080/cart/order', {
+        const ordrResponse = await fetch('http://localhost:8080/cart/order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -37,9 +37,17 @@ export default function Checkout({ accessToken }) {
             )
         });
 
+        if (ordrResponse.ok) {
+            const order = await ordrResponse.json()
+            //TODO, show order number (order.id) in confirmation screen
+            cartCtx.resetCart()
+            userProgressCtx.showOrderConfirmation()
+        }
     }
 
-    return <Modal className="cart" open={userProgressCtx.progress === 'checkout'} onClose={handleClose}>
+    return <Modal className="cart"
+        open={userProgressCtx.progress === 'checkout'}
+        onClose={UserProgressContext.progress === 'checkout' ? handleCloseCart : null}>
         <form onSubmit={handleSubmit}>
             <h2>Checlout</h2>
             <p>Total Amount: {currencyFormatter.format(cartTotal)}</p>
@@ -57,9 +65,6 @@ export default function Checkout({ accessToken }) {
                 <Button>Submit Order</Button>
             </p>
         </form>
-
-
-
     </Modal>
 
 
