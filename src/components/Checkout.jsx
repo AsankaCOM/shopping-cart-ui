@@ -39,7 +39,7 @@ export default function Checkout({ accessToken }) {
 
         if (ordrResponse.ok) {
             const order = await ordrResponse.json()
-            //TODO, show order number (order.id) in confirmation screen
+            localStorage.setItem('orderNumber', order.id)
             cartCtx.resetCart()
             userProgressCtx.showOrderConfirmation()
         }

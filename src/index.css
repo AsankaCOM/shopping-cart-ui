@@ -249,6 +249,18 @@ h1 {
   background-color: rgba(0, 0, 0, 0.55);
 }
 
+.order-details {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  /* color: #910606; */
+}
+
+.order-number {
+  font-weight: bold;
+  color: #5f615f; /* green shade */
+  margin-left: 5px;
+}
+
 .center {
   text-align: center;
 }
