@@ -16,7 +16,7 @@ export default function OrderConfirmation({ orderNumber }) {
         open={userProgressCtx.progress === 'order-confirmation'}
         onClose={UserProgressContext.progress === 'order-confirmation' ? handleCloseCart : null}>
         <div className="order-details center">
-            <p>Your order has been submitted 🎉 Here’s your order confirmation<span class="order-number">{localStorage.getItem('orderNumber')}</span></p>
+            <p>Your order has been submitted 🎉 Here’s your order confirmation<span className="order-number">{localStorage.getItem('orderNumber')}</span></p>
         
             <p>Thanks You!! 💖</p>
         </div>
