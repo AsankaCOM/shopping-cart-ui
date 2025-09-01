@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { use, useCallback, useContext, useEffect } from "react";
 import UserProgressContext from "../store/UserProgessContext";
 import Modal from "./ui/Modal";
 import CartContext from "../store/CartContext";
@@ -6,12 +6,36 @@ import { calculateTotal } from "../util/cartHelpers";
 import { currencyFormatter } from "../util/formatting";
 import Input from "./ui/input";
 import Button from "./ui/Button";
+import useHttp from "../hooks/useHttp";
+import Error from "./Error";
 
 export default function Checkout({ accessToken }) {
     const cartCtx = useContext(CartContext);
     const userProgressCtx = useContext(UserProgressContext);
 
-    const cartTotal = calculateTotal(cartCtx.items)
+    const getRequestConfig = useCallback(() => {
+        return {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            }
+        };
+    }, [accessToken]);
+
+    const {
+        data: order,
+        isLoarding: isSending,
+        error,
+        sendRequest
+    } = useHttp('http://localhost:8080/cart/order', getRequestConfig, null);
+
+    useEffect(() => {
+        if (order && !error) {
+            localStorage.setItem('orderNumber', order.id)
+            userProgressCtx.showOrderConfirmation()
+        }
+    }, [order, !error])
 
     const handleClose = () => {
         userProgressCtx.hideCart()
@@ -19,31 +43,33 @@ export default function Checkout({ accessToken }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log("Submitting order...")
 
         const fd = new FormData(event.target)
         const customerData = Object.fromEntries(fd.entries())
 
-        const ordrResponse = await fetch('http://localhost:8080/cart/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify(
-                {
-                    items: cartCtx.items,
-                    customer: customerData
-                }
-            )
-        });
-
-        if (ordrResponse.ok) {
-            const order = await ordrResponse.json()
-            localStorage.setItem('orderNumber', order.id)
-            cartCtx.resetCart()
-            userProgressCtx.showOrderConfirmation()
-        }
+        sendRequest(JSON.stringify(
+            {
+                items: cartCtx.items,
+                customer: customerData
+            }
+        ));
     }
+
+    let actions = (
+        <>
+            <Button type="button" textOnly onClick={handleClose}>
+                Close
+            </Button>
+            <Button>Submit Order</Button>
+        </>
+    );
+
+    if (isSending) {
+        actions = <span>Sending order data...</span>
+    }
+
+    const cartTotal = calculateTotal(cartCtx.items)
 
     return <Modal className="cart"
         open={userProgressCtx.progress === 'checkout'}
@@ -60,12 +86,9 @@ export default function Checkout({ accessToken }) {
                 <Input label="city" type="text" id="city" />
             </div>
 
-            <p className="modal-actions">
-                <Button type="button" textOnly onClick={handleClose}>Close</Button>
-                <Button>Submit Order</Button>
-            </p>
+            {error && <Error title="fail to submit order" message={error} />}
+
+            <p className="modal-actions">{actions}</p>
         </form>
     </Modal>
-
-
 }

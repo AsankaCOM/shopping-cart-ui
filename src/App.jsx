@@ -43,7 +43,9 @@ function App() {
     getUserMetadata();
   }, [getAccessTokenSilently, user?.sub]);
 
-  if (isLoading) return "Loading...";
+  if (isLoading) {
+    return <p className="center">Fetching user authentication data...</p>;
+  }
 
   const loginHandler = () => { login() }
   const logoutHandler = () => {
@@ -66,13 +68,13 @@ function App() {
           signup={signupHandler}
         />
 
-        {accessToken && 
-        <>
-          <Books accessToken={accessToken} />
-          <Cart />
-          <Checkout accessToken={accessToken} />
-          <OrderConfirmation />
-        </>}
+        {accessToken &&
+          <>
+            <Books accessToken={accessToken} />
+            <Cart />
+            <Checkout accessToken={accessToken} />
+            <OrderConfirmation />
+          </>}
 
       </CartContextProvider>
     </UserProgressContextProvider>

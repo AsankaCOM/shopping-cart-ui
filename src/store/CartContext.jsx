@@ -1,13 +1,13 @@
 import { createContext, useReducer } from "react";
 
-const initCartItems = {items: []}
+const initCartItems = { items: [] }
 
 // adding context to spreading the state to other components
 const CartContext = createContext({
     ...initCartItems,
     addItem: (item) => { },
     removeItem: (id) => { },
-    resetCart: () => {}
+    clearCart: () => { }
 })
 
 function cartReducer(state, action) {
@@ -56,7 +56,7 @@ function cartReducer(state, action) {
         return { ...state, items: updatedItems };
     }
 
-    if (action.type === 'RESET') {
+    if (action.type === 'CLEAR_CART') {
         return { ...state, ...initCartItems };
     }
 
@@ -67,7 +67,7 @@ function cartReducer(state, action) {
 export function CartContextProvider({ children }) {
     //Since the state here is a little bit complex, I opted for useReducer().
     //  For simpler state, useState() would have been sufficient
-    const [cart, dispatchCartAction] = useReducer(cartReducer, {...initCartItems })
+    const [cart, dispatchCartAction] = useReducer(cartReducer, { ...initCartItems })
 
 
     const addItem = (item) => {
@@ -78,8 +78,8 @@ export function CartContextProvider({ children }) {
         dispatchCartAction({ type: 'REMOVE_ITEM', id })
     }
 
-    const resetCart = () => {
-        dispatchCartAction({ type: 'RESET'})
+    const clearCart = () => {
+        dispatchCartAction({ type: 'CLEAR_CART' })
     }
 
     //this will distribute cart state to other components
@@ -87,7 +87,7 @@ export function CartContextProvider({ children }) {
         items: cart.items,
         addItem,
         removeItem,
-        resetCart
+        clearCart
     }
 
     return <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>

@@ -1,33 +1,35 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import BookItem from "./BookItem"
+import useHttp from "../hooks/useHttp";
+import Error from "./Error";
 
-function Books({ accessToken }) {
-    const [loadedBooks, setLoadedBooks] = useState([]);
+export default function Books({ accessToken }) {
 
-    useEffect(() => {
-        const fetchBooks = async () => {
-            const booksResponse = await fetch(`http://localhost:8080/cart/books`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-
-            if (!booksResponse.ok) {
-                // TODO, show an error
+    // The reason the {...} object is wrapped with useCallback is to prevent it from being recreated on every render,
+    //  which would otherwise cause an infinite loop in the useEffect() inside useHttp()
+    // TODO Asanka, try using JSON.stringify() instead of useCallback
+    const getRequestConfig = useCallback(() => {
+        return {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
             }
+        };
+    }, [accessToken]);
 
-            const books = await booksResponse.json();
-            setLoadedBooks(books);
-        }
+    const {
+        data: loadedBooks,
+        isLoarding,
+        error
+    } = useHttp(`http://localhost:8080/cart/books`, getRequestConfig, []);
 
-        fetchBooks();
+    if (isLoarding) {
+        return <p className="center">Fetching books...</p>;
+    }
 
-    }, [])
-
-
-    if (!loadedBooks || loadedBooks.length === 0) {
-        return <p>Books list is empty..</p>;
+    if (error) {
+        return <Error title="Fail to fetch books" message={error} />
     }
 
     return (
@@ -39,5 +41,3 @@ function Books({ accessToken }) {
         </ul>
     );
 }
-
-export default Books;
