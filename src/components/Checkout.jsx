@@ -1,4 +1,4 @@
-import { use, useCallback, useContext, useEffect } from "react";
+import { use, useCallback, useContext, useEffect, useActionState } from "react";
 import UserProgressContext from "../store/UserProgessContext";
 import Modal from "./ui/Modal";
 import CartContext from "../store/CartContext";
@@ -25,7 +25,6 @@ export default function Checkout({ accessToken }) {
 
     const {
         data: order,
-        isLoarding: isSending,
         error,
         sendRequest
     } = useHttp('http://localhost:8080/cart/order', getRequestConfig, null);
@@ -41,20 +40,21 @@ export default function Checkout({ accessToken }) {
         userProgressCtx.hideCart()
     }
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        console.log("Submitting order...")
-
-        const fd = new FormData(event.target)
+    // const checkoutSubmission = async (event) => {
+    const checkoutAction = async (prevState, fd) => {
+        // event.preventDefault();
+        // const fd = new FormData(event.target)
         const customerData = Object.fromEntries(fd.entries())
 
-        sendRequest(JSON.stringify(
-            {
+        await sendRequest(
+            JSON.stringify({
                 items: cartCtx.items,
                 customer: customerData
-            }
-        ));
+            })
+        );
     }
+
+    const [formState, formAction, isSending] = useActionState(checkoutAction, null)
 
     let actions = (
         <>
@@ -74,8 +74,10 @@ export default function Checkout({ accessToken }) {
     return <Modal className="cart"
         open={userProgressCtx.progress === 'checkout'}
         onClose={UserProgressContext.progress === 'checkout' ? handleCloseCart : null}>
-        <form onSubmit={handleSubmit}>
-            <h2>Checlout</h2>
+
+         {/* <form onSubmit={checkoutSubmission}></form> */}
+        <form action={formAction}>
+            <h2>Checkout</h2>
             <p>Total Amount: {currencyFormatter.format(cartTotal)}</p>
 
             <Input label="Full Name" type="text" id="name" />
