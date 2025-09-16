@@ -8,6 +8,7 @@ import Cart from "./components/Cart.jsx";
 import UserProgressContext, { UserProgressContextProvider } from "./store/UserProgessContext.jsx";
 import Checkout from "./components/Checkout.jsx";
 import OrderConfirmation from "./components/OrderConfirmation.jsx";
+import Error from "./components/Error.jsx";
 
 function App() {
   const {
@@ -47,7 +48,10 @@ function App() {
     return <p className="center">Fetching user authentication data...</p>;
   }
 
-  const loginHandler = () => { login() }
+   if (error) {
+    return <Error title="User authentication error" message={error?.message} />;
+  }
+
   const logoutHandler = () => {
     auth0Logout({
       logoutParams: {
@@ -55,17 +59,16 @@ function App() {
       }
     });
   }
-  const signupHandler = () => login({ authorizationParams: { screen_hint: "signup" } });
 
-  return !error ? (
+  return (
     <UserProgressContextProvider>
       <CartContextProvider>
         <Header
           isAuthenticated={isAuthenticated}
           user={user}
-          login={loginHandler}
+          login={() => { login() }}
           logout={logoutHandler}
-          signup={signupHandler}
+          signup={() => login({ authorizationParams: { screen_hint: "signup" } })}
         />
 
         {accessToken &&
@@ -78,12 +81,7 @@ function App() {
 
       </CartContextProvider>
     </UserProgressContextProvider>
-  ) : (
-    <>
-      {error && <p>Error: {error.message}</p>}
-    </>
   );
-
 }
 
 export default App;
