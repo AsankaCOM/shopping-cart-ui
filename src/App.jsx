@@ -21,7 +21,7 @@ function App() {
     getAccessTokenSilently,
   } = useAuth0();
 
-  const [accessToken, setAccessToken] = useState()
+  const [accessToken, setAccessToken] = useState(null)
 
   useEffect(() => {
     const getUserMetadata = async () => {
@@ -48,7 +48,7 @@ function App() {
     return <p className="center">Fetching user authentication data...</p>;
   }
 
-   if (error) {
+  if (error) {
     return <Error title="User authentication error" message={error?.message} />;
   }
 
@@ -70,15 +70,10 @@ function App() {
           logout={logoutHandler}
           signup={() => login({ authorizationParams: { screen_hint: "signup" } })}
         />
-
-        {accessToken &&
-          <>
-            <Books accessToken={accessToken} />
-            <Cart />
-            <Checkout accessToken={accessToken} />
-            <OrderConfirmation />
-          </>}
-
+        <Books accessToken={accessToken} />
+        <Cart />
+        <Checkout accessToken={accessToken} />
+        <OrderConfirmation />
       </CartContextProvider>
     </UserProgressContextProvider>
   );

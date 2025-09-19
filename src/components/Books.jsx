@@ -5,6 +5,9 @@ import useHttp from "../hooks/useHttp";
 import Error from "./Error";
 
 export default function Books({ accessToken }) {
+    if (accessToken === null) {
+        return <Error title="Please log in to view the book list." />
+    }
 
     // The reason the {...} object is wrapped with useCallback is to prevent it from being recreated on every render,
     //  which would otherwise cause an infinite loop in the useEffect() inside useHttp()
